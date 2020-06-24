@@ -30,7 +30,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buttonAdd = findViewById(R.id.buttonAdd);
+        etItem = findViewById(R.id.etitem);
+        rvItems = findViewById(R.id.rvItems);
 
+
+
+        // Listen for button press
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String todoItem = etItem.getText().toString();
+                // Add item to the model
+                items.add(todoItem);
+                // Notify adapter than an item was inserted
+                itemsAdapter.notifyItemInserted(items.size() - 1);
+                // Clear entry
+                etItem.setText("");
+                Toast.makeText(getApplicationContext(), "Item was added",
+                        Toast.LENGTH_SHORT).show();
+                saveItems();
+            }
+        });
     }
 
     private File getDataFile() {
