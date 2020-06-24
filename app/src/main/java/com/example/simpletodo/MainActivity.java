@@ -34,6 +34,23 @@ public class MainActivity extends AppCompatActivity {
         etItem = findViewById(R.id.etitem);
         rvItems = findViewById(R.id.rvItems);
 
+        loadItems();
+
+        ItemsAdapter.OnLongClickListener onLongClickListener = new ItemsAdapter.OnLongClickListener() {
+            @Override
+            public void onItemLongClicked(int position) {
+                // Delete the item from the model
+                items.remove(position);
+                // Notify the adapter at which position we deleted an item
+                itemsAdapter.notifyItemRemoved(position);
+                Toast.makeText(getApplicationContext(), "Item was removed",
+                        Toast.LENGTH_SHORT).show();
+                saveItems();
+            }
+        };
+        itemsAdapter = new ItemsAdapter(items, onLongClickListener);
+        rvItems.setAdapter(itemsAdapter);
+        rvItems.setLayoutManager(new  LinearLayoutManager(this));
 
 
         // Listen for button press
