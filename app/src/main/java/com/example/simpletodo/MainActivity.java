@@ -1,5 +1,6 @@
 package com.example.simpletodo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,12 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String KEY_ITEM_TEXT = "item_text";
+    public static final String KEY_ITEM_POSITION = "item_position";
+    public static final int EDIT_TEXT_CODE = 1;
+
     List<String> items;
 
     Button buttonAdd;
     EditText etItem;
     RecyclerView rvItems;
     ItemsAdapter itemsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +54,19 @@ public class MainActivity extends AppCompatActivity {
                 saveItems();
             }
         };
-        itemsAdapter = new ItemsAdapter(items, onLongClickListener);
+        ItemsAdapter.OnClickListener onClickListener = new ItemsAdapter.OnClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                // Create the new activity
+                Intent i = new Intent(MainActivity.this, EditActivity.class);
+                // pass the data being edited
+                i.putExtra(KEY_ITEM_TEXT, items.get(position));
+                i.putExtra(KEY_ITEM_POSITION, position);
+                // display the activity
+                startActivityForResult(i, EDIT_TEXT_CODE);
+            }
+        };
+        itemsAdapter = new ItemsAdapter(items, onLongClickListener, onClickListener);
         rvItems.setAdapter(itemsAdapter);
         rvItems.setLayoutManager(new  LinearLayoutManager(this));
 
